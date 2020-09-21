@@ -26,15 +26,17 @@ export const SwitchDataLogout = [
   { comp: Login, text: "Login", to: "/login" },
   { comp: Games, text: "Games", to: "/games" },
   { comp: Movies, text: "Movies", to: "/" },
+  { comp: DetailGame, text: "Detail Game", to: "/detail/game/:id" },
+  { comp: DetailMovie, text: "Detail Movie", to: "/detail/movie/:id" },
 ];
 
 export const SwitchDataLogin = [
   ...NavDataLogin,
   { comp: TableGame, text: "Editor", to: "/editor/game" },
-  { comp: DetailGame, text: "Detail Game", to: "/detail/game/:id" },
-  { comp: DetailMovie, text: "Detail Movie", to: "/detail/movie/:id" },
   { comp: EditGame, text: "Edit Game", to: "/edit/game/:id" },
   { comp: EditMovie, text: "Edit Movie", to: "/edit/movie/:id" },
+  { comp: DetailGame, text: "Detail Game", to: "/detail/game/:id" },
+  { comp: DetailMovie, text: "Detail Movie", to: "/detail/movie/:id" },
   { comp: DeleteGame, text: "Delete Game", to: "/delete/game/:id" },
   { comp: DeleteMovie, text: "Delete Movie", to: "/delete/movie/:id" },
   { comp: AddGame, text: "Add Game", to: "/add/game" },
