@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { Form, Input, Button, Layout, message } from "antd";
 import { Link, useHistory } from "react-router-dom";
-import axios from "axios";
 import { MainContext } from "./main";
+import api from "./api";
 
 const layout = {
   labelCol: { span: 8 },
@@ -23,14 +23,14 @@ const Register = () => {
     var email = values.email;
     var password = values.password;
 
-    axios
-      .post("https://backendexample.sanbersy.com/api/register", {
+    const reg = api;
+    reg
+      .post("register", {
         name,
         email,
         password,
       })
       .then((res) => {
-        console.log(res);
         message.success("Your account has been created");
         setUser(res.data);
         history.push("/");

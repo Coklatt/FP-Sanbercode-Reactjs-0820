@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Form, Input, Button, Layout, message } from "antd";
 import { Link, useHistory } from "react-router-dom";
 import { MainContext, a, b } from "./main";
-import axios from "axios";
+import api from "./api";
 
 const layout = {
   labelCol: { span: 8 },
@@ -24,13 +24,13 @@ const Login = () => {
     var password = values.password;
     const hide = message.loading("Logging in", 0);
     setTimeout(hide, 1000);
-    axios
-      .post("https://backendexample.sanbersy.com/api/user-login", {
+    const login = api;
+    login
+      .post("user-login", {
         email,
         password,
       })
       .then((res) => {
-        console.log(res);
         setUser(res.data);
         localStorage.setItem("fp", JSON.stringify(res.data));
 

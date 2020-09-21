@@ -41,14 +41,12 @@ export const ChangePass = () => {
         headers: { Authorization: `Bearer ${user.token}` },
       })
       .then((res) => {
-        console.log(res);
         message.success("Change password success");
         setUser(res.data);
         localStorage.setItem("fp", JSON.stringify(res.data));
         history.push("/");
       })
       .catch((res) => {
-        console.log(res);
         message.error("Failed to change password");
       });
   };

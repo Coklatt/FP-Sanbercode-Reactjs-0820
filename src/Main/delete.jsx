@@ -4,6 +4,7 @@ import axios from "axios";
 import { message, Card } from "antd";
 import { MainContext } from "./main";
 import { LoadingOutlined } from "@ant-design/icons";
+import api from "./api";
 
 export const DeleteMovie = () => {
   const { user, movie, setMovie } = useContext(MainContext);
@@ -14,13 +15,16 @@ export const DeleteMovie = () => {
 
   const newMovie = movie.filter((el) => parseInt(el.id) !== parseInt(id));
 
+  const del = api;
+  del.delete(`data-movie/${parseInt(id)}`, {
+    headers: { Authorization: `Bearer ${user.token}` },
+  });
   axios
     .delete(
       `https://backendexample.sanbersy.com/api/data-movie/${parseInt(id)}`,
       { headers: { Authorization: `Bearer ${user.token}` } }
     )
     .then((res) => {
-      console.log(res);
       setMovie(newMovie);
       message.success("Delete success");
       history.push("/editor/movie");
@@ -54,13 +58,12 @@ export const DeleteGame = () => {
 
   const newGame = game.filter((el) => parseInt(el.id) !== parseInt(id));
 
-  axios
-    .delete(
-      `https://backendexample.sanbersy.com/api/data-game/${parseInt(id)}`,
-      { headers: { Authorization: `Bearer ${user.token}` } }
-    )
+  const del = api;
+  del
+    .delete(`data-game/${parseInt(id)}`, {
+      headers: { Authorization: `Bearer ${user.token}` },
+    })
     .then((res) => {
-      console.log(res);
       setGame(newGame);
       message.success("Delete success");
       history.push("/editor/game");

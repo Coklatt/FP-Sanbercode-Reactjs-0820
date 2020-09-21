@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { Form, Input, Button, InputNumber, Card, message } from "antd";
-import axios from "axios";
 import { MainContext } from "./main";
 import { useHistory, useParams } from "react-router-dom";
+import api from "./api";
 
 const layout = {
   labelCol: { span: 6 },
@@ -13,11 +13,11 @@ const tailLayout = {
 };
 
 export const EditMovie = () => {
-  const { no } = useParams;
+  const { id } = useParams();
   const history = useHistory();
   const { movie, setMovie, user } = useContext(MainContext);
   const currentMovie =
-    movie !== null && movie.filter((el) => parseInt(el.id) === parseInt(no));
+    movie !== null && movie.filter((el) => parseInt(el.id) === parseInt(id))[0];
   const [form] = Form.useForm();
   form.setFieldsValue({
     title: currentMovie.title,
@@ -29,42 +29,30 @@ export const EditMovie = () => {
   });
 
   const onFinish = (values) => {
-    // ================== Gak tau kenapa ID nya gak dapet kek. Keburuan deadline ===============
-
-    console.log(currentMovie);
-    console.log("Param" + no);
-    // console.log("Success:", values);
-    // const hide = message.loading("Changing movie", 0);
-    // setTimeout(hide, 1000);
-
-    // var changeMovie = {
-    //   title: values.title,
-    //   description: values.description,
-    //   year: parseInt(values.year),
-    //   genre: values.genre,
-    //   rating: parseInt(values.rating),
-    //   image_url: values.image_url,
-    // };
-
-    // var newMovie = movie.filter((el) => parseInt(el.id) !== parseInt(id));
-
-    // const change = axios.create({
-    //   baseURL: `https://backendexample.sanbersy.com/api/`,
-    // });
-    // change
-    //   .put(`data-movie/${id}`, changeMovie, {
-    //     headers: { Authorization: `Bearer ${user.token}` },
-    //   })
-    //   .then((res) => {
-    //     console.log(res);
-    //     setMovie([...newMovie, res.data]);
-    //     message.success("Movie changed");
-    //     history.push("/editor/movie");
-    //   })
-    //   .catch((res) => {
-    //     console.log(res);
-    //     message.error("Failed to change movie");
-    //   });
+    const hide = message.loading("Changing movie", 0);
+    setTimeout(hide, 1000);
+    var changeMovie = {
+      title: values.title,
+      description: values.description,
+      year: parseInt(values.year),
+      genre: values.genre,
+      rating: parseInt(values.rating),
+      image_url: values.image_url,
+    };
+    var newMovie = movie.filter((el) => parseInt(el.id) !== parseInt(id));
+    const edit = api;
+    edit
+      .put(`data-movie/${parseInt(id)}`, changeMovie, {
+        headers: { Authorization: `Bearer ${user.token}` },
+      })
+      .then((res) => {
+        setMovie([...newMovie, res.data]);
+        message.success("Movie changed");
+        history.push("/editor/movie");
+      })
+      .catch(() => {
+        message.error("Failed to change movie");
+      });
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -163,7 +151,6 @@ export const EditGame = () => {
   });
 
   const onFinish = (values) => {
-    console.log("Success:", values);
     const hide = message.loading("Changing game", 0);
     setTimeout(hide, 1000);
 
@@ -177,21 +164,17 @@ export const EditGame = () => {
 
     var newGame = game.filter((el) => parseInt(el.id) !== parseInt(id));
 
-    const add = axios.create({
-      baseURL: `https://backendexample.sanbersy.com/api/`,
-    });
-    add
+    const edit = api;
+    edit
       .put(`data-game/${id}`, editGame, {
         headers: { Authorization: `Bearer ${user.token}` },
       })
       .then((res) => {
-        console.log(res);
         setGame([...newGame, res.data]);
         message.success("Game changed");
         history.push("/editor/game");
       })
       .catch((res) => {
-        console.log(res);
         message.error("Failed to add game");
       });
   };

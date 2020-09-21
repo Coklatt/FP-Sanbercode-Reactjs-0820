@@ -1,8 +1,8 @@
 import React, { createContext, useState, useEffect } from "react";
-import axios from "axios";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { Layout, Menu } from "antd";
 import { PoweroffOutlined } from "@ant-design/icons";
+import api from "./api";
 
 import Register from "./register";
 
@@ -32,36 +32,30 @@ const Main = () => {
 
     // Movies changes effect
     if (movie === null) {
-      axios
-        .get("http://backendexample.sanbercloud.com/api/data-movie")
+      const getMov = api;
+      getMov
+        .get("data-movie")
         .then((result) => {
-          console.log("Movie");
-          console.log(result);
           setMovie(result.data);
         })
         .catch((error) => console.log(error));
     }
 
     if (game === null) {
-      axios
-        .get("http://backendexample.sanbercloud.com/api/data-game")
+      const getGame = api;
+      getGame
+        .get("data-game")
         .then((result) => {
-          console.log("Game");
-          console.log(result);
           setGame(result.data);
         })
         .catch((error) => console.log(error));
     }
 
     // User Login Handler
-    console.log(userData);
-    console.log(user);
     if (user === null) {
       if (userData === null || userData === {}) {
-        console.log("Blom Login");
         localStorage.setItem("fp", JSON.stringify(null));
       } else {
-        console.log("Login dari localstorage");
         setUser(userData);
       }
     }
@@ -69,11 +63,9 @@ const Main = () => {
     // Nav And Switch Handler
     if (navMenu === null && switchItem === null) {
       if (userData !== null) {
-        console.log("Udah Login Nav");
         setNavMenu(NavDataLogin);
         setSwitchItem(SwitchDataLogin);
       } else {
-        console.log("Blom Login Nav");
         setNavMenu(NavDataLogout);
         setSwitchItem(SwitchDataLogout);
       }

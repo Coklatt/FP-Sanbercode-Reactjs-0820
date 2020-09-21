@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { Form, Input, Button, InputNumber, Card, message } from "antd";
-import axios from "axios";
 import { MainContext } from "./main";
 import { useHistory } from "react-router-dom";
+import api from "./api";
 
 const layout = {
   labelCol: { span: 6 },
@@ -16,7 +16,6 @@ export const AddMovie = () => {
   const history = useHistory();
   const { movie, setMovie, user } = useContext(MainContext);
   const onFinish = (values) => {
-    console.log("Success:", values);
     const hide = message.loading("Adding movie", 0);
     setTimeout(hide, 1000);
 
@@ -29,21 +28,17 @@ export const AddMovie = () => {
       image_url: values.image_url,
     };
 
-    const add = axios.create({
-      baseURL: `https://backendexample.sanbersy.com/api/`,
-    });
+    const add = api;
     add
       .post("data-movie", newMovie, {
         headers: { Authorization: `Bearer ${user.token}` },
       })
       .then((res) => {
-        console.log(res);
         setMovie([...movie, res.data]);
         message.success("Movie added");
         history.push("/editor/movie");
       })
       .catch((res) => {
-        console.log(res);
         message.error("Failed to add movie");
       });
   };
@@ -126,7 +121,6 @@ export const AddGame = () => {
   const history = useHistory();
   const { game, setGame, user } = useContext(MainContext);
   const onFinish = (values) => {
-    console.log("Success:", values);
     const hide = message.loading("Adding game", 0);
     setTimeout(hide, 1000);
 
@@ -138,21 +132,17 @@ export const AddGame = () => {
       platform: values.platform,
     };
 
-    const add = axios.create({
-      baseURL: `https://backendexample.sanbersy.com/api/`,
-    });
+    const add = api;
     add
       .post("data-game", newGame, {
         headers: { Authorization: `Bearer ${user.token}` },
       })
       .then((res) => {
-        console.log(res);
         setGame([...game, res.data]);
         message.success("Game added");
         history.push("/editor/game");
       })
       .catch((res) => {
-        console.log(res);
         message.error("Failed to add game");
       });
   };

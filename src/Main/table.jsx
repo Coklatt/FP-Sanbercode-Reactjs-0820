@@ -1,7 +1,6 @@
-import React, { useContext, useState } from "react";
-import { Table, Tag, Button, Popconfirm, Layout, Menu } from "antd";
+import React, { useContext } from "react";
+import { Table, Tag, Button, Layout, Menu } from "antd";
 import {
-  QuestionCircleOutlined,
   EditOutlined,
   DeleteOutlined,
   PlusCircleOutlined,
@@ -26,8 +25,7 @@ const colors = [
 ];
 
 export const TableMovie = () => {
-  const { movie, setMovie, user } = useContext(MainContext);
-  const { idDelete, setIdDelete } = useState(null);
+  const { movie } = useContext(MainContext);
 
   const columns = [
     {
@@ -273,8 +271,7 @@ export const TableMovie = () => {
 // Table Game
 
 export const TableGame = () => {
-  const { game, setGame, user } = useContext(MainContext);
-  const { idDelete, setIdDelete } = useState(null);
+  const { game } = useContext(MainContext);
 
   const columns = [
     {

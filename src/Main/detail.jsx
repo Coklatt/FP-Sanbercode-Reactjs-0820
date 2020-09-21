@@ -23,7 +23,6 @@ export const DetailMovie = () => {
   const { movie } = useContext(MainContext);
   const currentMovie =
     movie !== null && movie.filter((el) => Number(el.id) === Number(id))[0];
-  console.log(currentMovie);
   return (
     <>
       {movie !== null && (
@@ -66,7 +65,6 @@ export const DetailGame = () => {
   const { game } = useContext(MainContext);
   const currentGame =
     game !== null && game.filter((el) => Number(el.id) === Number(id))[0];
-  console.log(currentGame);
   return (
     <>
       {game !== null && (
