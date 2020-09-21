@@ -1,37 +1,35 @@
 import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { Layout, Menu, Breadcrumb } from "antd";
-import {
-  UserOutlined,
-  LaptopOutlined,
-  NotificationOutlined,
-  HomeFilled,
-} from "@ant-design/icons";
-import Movies from "./movies";
-import Login from "./login";
-import Games from "./games";
-import Editor from "./editor";
-import Logout from "./logout";
-import Register from "./register";
-import { DetailMovie, DetailGame } from "./detail";
+import { Layout, Menu } from "antd";
+import { PoweroffOutlined } from "@ant-design/icons";
 
-const { SubMenu } = Menu;
-const { Header, Content, Sider, Footer } = Layout;
+import Register from "./register";
+
+import {
+  NavDataLogin,
+  NavDataLogout,
+  SwitchDataLogin,
+  SwitchDataLogout,
+} from "./nav";
+
+const { Header, Footer } = Layout;
 export const MainContext = createContext();
+export const a = NavDataLogin;
+export const b = SwitchDataLogin;
+export const c = NavDataLogout;
+export const d = SwitchDataLogout;
 
 const Main = () => {
   const [movie, setMovie] = useState(null);
   const [game, setGame] = useState(null);
   const [user, setUser] = useState(null);
-  const [navMenu, setNavMenu] = useState([
-    { comp: Login, text: "Login", to: "/login" },
-    { comp: Games, text: "Games", to: "/games" },
-    { comp: Movies, text: "Movies", to: "/" },
-  ]);
+  const [navMenu, setNavMenu] = useState(null);
+  const [switchItem, setSwitchItem] = useState(null);
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("fp"));
+
     // Movies changes effect
     if (movie === null) {
       axios
@@ -55,45 +53,44 @@ const Main = () => {
         .catch((error) => console.log(error));
     }
 
+    // User Login Handler
     console.log(userData);
     console.log(user);
     if (user === null) {
       if (userData === null || userData === {}) {
-        setNavMenu([
-          { comp: Login, text: "Login", to: "/login" },
-          { comp: Games, text: "Games", to: "/games" },
-          { comp: Movies, text: "Movies", to: "/" },
-        ]);
+        console.log("Blom Login");
         localStorage.setItem("fp", JSON.stringify(null));
       } else {
-        setNavMenu([
-          { comp: Logout, text: "Logout", to: "/logout" },
-          { comp: Editor, text: "Editor", to: "/editor" },
-          { comp: Games, text: "Games", to: "/games" },
-          { comp: Movies, text: "Movies", to: "/" },
-        ]);
-      }
-    } else {
-      if (userData !== null && userData !== {}) {
-        setNavMenu([
-          { comp: Logout, text: "Logout", to: "/logout" },
-          { comp: Editor, text: "Editor", to: "/editor" },
-          { comp: Games, text: "Games", to: "/games" },
-          { comp: Movies, text: "Movies", to: "/" },
-        ]);
-      } else {
+        console.log("Login dari localstorage");
+        setUser(userData);
       }
     }
-  }, [movie, game, user]);
+
+    // Nav And Switch Handler
+    if (navMenu === null && switchItem === null) {
+      if (userData !== null) {
+        console.log("Udah Login Nav");
+        setNavMenu(NavDataLogin);
+        setSwitchItem(SwitchDataLogin);
+      } else {
+        console.log("Blom Login Nav");
+        setNavMenu(NavDataLogout);
+        setSwitchItem(SwitchDataLogout);
+      }
+    }
+  }, [movie, game, user, switchItem, navMenu]);
 
   return (
     <MainContext.Provider
       value={{
         movie,
-        setMovie,
         game,
+        user,
+        setMovie,
         setGame,
         setUser,
+        setNavMenu,
+        setSwitchItem,
       }}
     >
       <Layout>
@@ -103,34 +100,48 @@ const Main = () => {
             style={{ position: "fixed", zIndex: 1, width: "100%" }}
           >
             <div className="logo" />
-            <Menu
-              theme="dark"
-              mode="horizontal"
-              defaultSelectedKeys={[navMenu.length + ""]}
-            >
-              {navMenu.map((el, index) => {
-                return (
-                  <Menu.Item style={{ float: "right" }} key={index}>
-                    <Link to={el.to}>{el.text}</Link>
-                  </Menu.Item>
-                );
-              })}
+            <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["home"]}>
+              {navMenu !== null &&
+                navMenu.map((el, index) => {
+                  if (el.text === "Logout") {
+                    return (
+                      <Menu.Item
+                        icon={<PoweroffOutlined />}
+                        style={{ float: "right" }}
+                        key={index}
+                      >
+                        <Link to={el.to}>{el.text}</Link>
+                      </Menu.Item>
+                    );
+                  } else {
+                    return (
+                      <Menu.Item
+                        style={{ float: "right" }}
+                        key={el.text === "Movies" ? "home" : index}
+                      >
+                        <Link to={el.to}>{el.text}</Link>
+                      </Menu.Item>
+                    );
+                  }
+                })}
             </Menu>
           </Header>
           <Switch>
-            {navMenu.map((el) => {
-              if (el.to === "/") {
-                return <Route exact path={el.to} component={el.comp} />;
-              } else {
-                return <Route path={el.to} component={el.comp} />;
-              }
-            })}
+            {switchItem !== null &&
+              switchItem.map((el) => {
+                if (el.to === "/") {
+                  return <Route exact path={el.to} component={el.comp} />;
+                } else {
+                  return <Route path={el.to} component={el.comp} />;
+                }
+              })}
             <Route path="/register" component={Register} />
-            <Route path="/detail/movie/:id" component={DetailMovie} />
-            <Route path="/detail/game/:id" component={DetailGame} />
           </Switch>
         </Router>
       </Layout>
+      <Footer className="center">
+        Final Project - Sanbercode ReactJs Online Bootcamp by @r.eader
+      </Footer>
     </MainContext.Provider>
   );
 };

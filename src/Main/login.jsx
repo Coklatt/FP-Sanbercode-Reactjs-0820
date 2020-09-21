@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Form, Input, Button, Layout, message } from "antd";
 import { Link, useHistory } from "react-router-dom";
-import { MainContext } from "./main";
+import { MainContext, a, b } from "./main";
 import axios from "axios";
 
 const layout = {
@@ -10,19 +10,20 @@ const layout = {
 };
 
 const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
+  wrapperCol: { span: 16 },
 };
 
 const { Content } = Layout;
 
 const Login = () => {
   const history = useHistory();
-  const { setUser } = useContext(MainContext);
+  const { setUser, setNavMenu, setSwitchItem } = useContext(MainContext);
   const [form] = Form.useForm();
   const onFinish = (values) => {
     var email = values.email;
     var password = values.password;
-
+    const hide = message.loading("Logging in", 0);
+    setTimeout(hide, 1000);
     axios
       .post("https://backendexample.sanbersy.com/api/user-login", {
         email,
@@ -32,7 +33,15 @@ const Login = () => {
         console.log(res);
         setUser(res.data);
         localStorage.setItem("fp", JSON.stringify(res.data));
-        history.push("/");
+
+        // Set Navbar and Switch
+        setNavMenu(a);
+        setSwitchItem(b);
+
+        setTimeout(() => {
+          message.success("Login Success");
+          history.push("/");
+        }, 1100);
       })
       .catch((res) => {
         message.error("Wrong email or password");

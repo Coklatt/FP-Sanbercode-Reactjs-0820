@@ -3,20 +3,26 @@ import { Card, Button, Tooltip, message } from "antd";
 import { PoweroffOutlined } from "@ant-design/icons";
 import { MainContext } from "./main";
 import { useHistory } from "react-router-dom";
+import { NavDataLogout, SwitchDataLogout } from "./nav";
 
 const Logout = () => {
-  const { setUser } = useContext(MainContext);
+  const { setUser, setNavMenu, setSwitchItem } = useContext(MainContext);
   const history = useHistory();
 
   const logoutHandler = () => {
     localStorage.clear();
     setUser(null);
     const hide = message.loading("Logging out", 0);
-    setTimeout(hide, 390);
+
+    // Unset Nav and Switch
+    setNavMenu(NavDataLogout);
+    setSwitchItem(SwitchDataLogout);
+
+    setTimeout(hide, 1000);
     setTimeout(() => {
       message.success("You are logged out");
       history.push("/");
-    }, 400);
+    }, 1100);
   };
 
   return (
